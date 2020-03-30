@@ -1,0 +1,44 @@
+create database vega;
+use vega;
+
+#建立类型表
+create table t_type(
+	id int UNSIGNED PRIMARY key auto_increment,
+	type varchar(20) NOT NULL unique
+);
+
+#建立角色表
+create table t_role(
+	id int UNSIGNED primary key auto_increment,
+	role varchar(20) not null unique
+);
+
+insert into t_role(role) values('管理员'),('新闻编辑');
+
+#建立用户表
+create table t_user(
+	id int unsigned primary key auto_increment,
+	username varchar(20) not null unique,
+	password varchar(500) not null,
+	email varchar(100) not null,
+	role_id int unsigned not null,
+	index(username)
+);
+insert into t_user(username,password,email,role_id)
+values('scott',hex(aes_encrypt('123456','HelloWorld')),'scott@163.com',2);
+
+#建立新闻表
+create table t_news(
+	id int UNSIGNED primary key auto_increment,
+	title varchar(40) not null,
+	editor_id int unsigned not null,
+	type_id int unsigned not null,
+	content_id char(12) not null,
+	is_top TINYINT UNSIGNED not null,
+	create_time TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+	update_time TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+	state enum('草稿','待审批','已审批','隐藏') not null,
+	index(editor_id),
+	index(type_id),
+	index(state)
+);
